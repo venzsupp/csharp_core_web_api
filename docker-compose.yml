@@ -1,0 +1,40 @@
+version: '3.9'
+services:
+  csharp-api:
+    container_name: "csharp-api"
+    build: .
+    volumes:
+      - .:/src
+    ports:
+      - "5201:8080"
+  csharp-_sqldb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: always
+    ports:
+      - 1433:1433
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Platinum01"
+
+  # csharp-mysql:
+  # dotnet add package Microsoft.EntityFrameworkCore
+  # /opt/mssql-tools18/bin/sqlcmd  -S "127.0.0.1,1433" -U sa -P "Platinum01" -C Encrypt=yes;TrustServerCertificate=yes
+  # SELECT name FROM sys.databases;
+  #   container_name: "csharp-mysql"
+  #   image: mysql
+  #   restart: always
+  #   environment:
+  #     MYSQL_DATABASE: 'csharp_db'
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_USER: master_user
+  #     MYSQL_PASSWORD: Password@1#
+  # csharp-pma:
+  #   container_name: "csharp-pma"
+  #   image: phpmyadmin
+  #   restart: always
+  #   ports:
+  #     - 5089:80
+  #     - 5088:443
+  #   environment:
+  #     - PMA_ARBITRARY=1
+  #     - UPLOAD_LIMIT=300M
