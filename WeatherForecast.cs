@@ -1,4 +1,4 @@
-namespace webapi;
+namespace csharp_core_web_api;
 
 public class WeatherForecast
 {

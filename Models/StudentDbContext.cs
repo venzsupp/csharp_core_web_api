@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace webapi.Models;
+namespace csharp_core_web_api.Models;
 
 public class StudentDbContext : DbContext
 {
