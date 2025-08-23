@@ -5,8 +5,17 @@ services:
     build: .
     volumes:
       - .:/src
+    # ports:
+    #   - "5201:8080"
+  csharp-web:
+    image: nginx:latest
     ports:
-      - "5201:8080"
+        - "5021:8080"
+    volumes:
+        - .:/var/www/html/api
+        - ./nginx.conf:/etc/nginx/conf.d/site.conf
+    links:
+        - csharp-api
   csharp-sqldb:
     container_name: "csharp-sqldb"
     image: mcr.microsoft.com/mssql/server:2022-latest

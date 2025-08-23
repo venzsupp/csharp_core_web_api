@@ -20,4 +20,4 @@ ARG ENVIRONMENT=Development
 ENV ASPNETCORE_ENVIRONMENT $ENVIRONMENT
 ENTRYPOINT ["dotnet", "csharp_core_web_api.dll"]
 
-#### after change rub this command docker-compose up --build
+#### after change run this command docker-compose up --build
