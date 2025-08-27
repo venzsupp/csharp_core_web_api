@@ -27,8 +27,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-try
-{
+
     var connectionString = builder.Configuration.GetConnectionString("StudentDbConnection");
 
     // builder.Services.AddAllDbContexts(builder.Configuration);
@@ -39,11 +38,6 @@ try
 
     builder.Services.AddDbContext<UserDbContext>(dbOptions);
     builder.Services.AddDbContext<StudentDbContext>(dbOptions);
-}
-catch (Exception ex)
-{
-    
-}
 
 // builder.Services.AddSingleton<IDbConnection>( ser =>
 // {

@@ -7,7 +7,7 @@ namespace csharp_core_web_api.Actions;
 
 public class LoginAction
 {
-    private IDbConnection _dbConnection;
+    // private IDbConnection _dbConnection;
 
     private UserDbContext _userDbContext;
     
