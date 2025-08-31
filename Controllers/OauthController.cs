@@ -76,8 +76,7 @@ public class OauthController : ControllerBase
     [HttpPost("token")]
     public async Task<IActionResult> ExchangeCodeForTokenAsync(string code)
     {
-        // try
-        // {
+ 
             var client = new HttpClient();
             var domain = "dev-53038owxmae5eghj.au.auth0.com";
             var clientId = "AsvMJsJwFhnpBP0PDUm0r1aBXQcH1PVd";
@@ -103,15 +102,6 @@ public class OauthController : ControllerBase
             //     throw new Exception($"Auth0 token exchange failed: {body}");
 
             return new OkObjectResult(body);
-            // return JsonSerializer.Deserialize<IActionResult>(body);
-        // }
-        // catch (Exception ex)
-        // {
-        //     _logger.LogError(ex.Message);
-        //     return OAuthTokenResponse.Failed(ex);
-        //     //return JsonSerializer.Deserialize<OAuthTokenResponse>(JsonSerializer.Serialize(new { error = ex.Message }));
-        // }
-        
 
     }
 }
