@@ -38,6 +38,11 @@ builder.Services.AddCors(options =>
 
     builder.Services.AddDbContext<UserDbContext>(dbOptions);
     builder.Services.AddDbContext<StudentDbContext>(dbOptions);
+//Plm18@1QazMeeva-- oauth--pawd
+// dev-53038owxmae5eghj.au.auth0.com -- tenant domain
+
+// cleint secret == a4pYfBgeQFntXfE2gMoOWk2hCrVWFWQ7un6fp0EQPCj06o1b463w2tcSYKogOfn3
+// client id == AsvMJsJwFhnpBP0PDUm0r1aBXQcH1PVd
 
 // builder.Services.AddSingleton<IDbConnection>( ser =>
 // {
