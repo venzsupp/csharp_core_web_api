@@ -104,4 +104,37 @@ public class OauthController : ControllerBase
             return new OkObjectResult(body);
 
     }
+
+
+    [HttpGet("oauth_token")]
+    public async Task<IActionResult> OauthTokenAsync()
+    {
+ 
+            var client = new HttpClient();
+            var domain = "dev-53038owxmae5eghj.au.auth0.com";
+            var clientId = "AsvMJsJwFhnpBP0PDUm0r1aBXQcH1PVd";
+            var clientSecret = "a4pYfBgeQFntXfE2gMoOWk2hCrVWFWQ7un6fp0EQPCj06o1b463w2tcSYKogOfn3";
+            //var redirectUri = "http://api.hscsharp.com:5021/api/Oauth/callback";
+            var audienceUrl = "https://dev-53038owxmae5eghj.au.auth0.com/api/v2/";
+            var parameters = new Dictionary<string, string>
+            {
+                { "grant_type", "client_credentials" },
+                { "client_id", clientId },
+                { "client_secret", clientSecret },
+                {"audience", audienceUrl}
+            };
+
+            var content = new FormUrlEncodedContent(parameters);
+            Console.WriteLine(content);
+
+            //return new OkObjectResult(new { result = "code" });
+            var response = await client.PostAsync($"https://{domain}/oauth/token", content);
+            var body = await response.Content.ReadAsStringAsync();
+
+            // // if (!responseji)NM pl.ui  .IsSuccessStatusCode)
+            // //     throw new Exception($"Auth0 token exchange failed: {body}");
+
+            return new OkObjectResult(body);
+
+    }
 }
