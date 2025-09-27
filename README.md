@@ -2,7 +2,7 @@
 
 # set current github user account
 
-# git remote set-url origin git@ggithub-personal:venzsupp/csharp_core_web_api.git
+# git remote set-url origin git@github-personal:venzsupp/csharp_core_web_api.git
 
 # test the user account connection
 
