@@ -1,8 +1,16 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+# Install debugger
+RUN apt-get update \
+    && apt-get install -y curl unzip \
+    && curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l /vsdbg 
+    
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /var/www/html
 COPY ["csharp_core_web_api.csproj", "."]
 RUN dotnet restore "./csharp_core_web_api.csproj"
+
+
+    
 COPY . .
 WORKDIR "/var/www/html"
 RUN dotnet build "./csharp_core_web_api.csproj" -c %BUILD_CONFIGURATION% -o /app/build
