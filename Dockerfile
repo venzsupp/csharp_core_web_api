@@ -19,6 +19,9 @@ FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./csharp_core_web_api.csproj" -c %BUILD_CONFIGURATION% -o /app/publish /p:UseAppHost=false
 
+RUN dotnet build -c Debug -o /app/build
+RUN dotnet publish -c Debug -o /app/publish
+
 FROM build AS final
 WORKDIR /var/www/html
 # EXPOSE 8080
