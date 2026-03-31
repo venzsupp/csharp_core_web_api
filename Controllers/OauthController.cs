@@ -3,6 +3,7 @@ using csharp_core_web_api.Models;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using System.Text.Json;
 using System.Net.Mail;
+using Microsoft.Extensions.Options;
 
 namespace csharp_core_web_api.Controllers;
 
@@ -13,10 +14,14 @@ namespace csharp_core_web_api.Controllers;
 public class OauthController : ControllerBase
 {
     private readonly ILogger<OauthController> _logger;
+    private readonly OAuthCredentials _config;
 
-    public OauthController(ILogger<OauthController> logger)
+    public OauthController(ILogger<OauthController> logger, IOptions<OAuthCredentials> options)
     {
         _logger = logger;
+        _config = options.Value;
+
+        
     }
 
     [HttpGet("authorize")]
@@ -78,12 +83,13 @@ public class OauthController : ControllerBase
     {
  
             var client = new HttpClient();
-            var domain = "dev-53038owxmae5eghj.au.auth0.com";
-            var clientId = "AsvMJsJwFhnpBP0PDUm0r1aBXQcH1PVd";
-            var clientSecret = "a4pYfBgeQFntXfE2gMoOWk2hCrVWFWQ7un6fp0EQPCj06o1b463w2tcSYKogOfn3";
-            var redirectUri = "http://api.hscsharp.com:5021/api/Oauth/callback";
+            
+            var domain = _config.Domain;
+            var clientId = _config.ClientID;
+            var clientSecret = _config.ClientSecret;
+            var redirectUri = _config.RedirectUrl;
             // string code = "6P1jkEzqDBfX_xvBeORvkzPQtouISQAV6PTira0Xgqkhk";
-            Console.WriteLine(code);
+            //Console.WriteLine(code);
             var parameters = new Dictionary<string, string>
             {
                 { "grant_type", "authorization_code" },
@@ -109,13 +115,13 @@ public class OauthController : ControllerBase
     [HttpGet("oauth_token")]
     public async Task<IActionResult> OauthTokenAsync()
     {
- 
+        try { 
             var client = new HttpClient();
-            var domain = "dev-53038owxmae5eghj.au.auth0.com";
-            var clientId = "AsvMJsJwFhnpBP0PDUm0r1aBXQcH1PVd";
-            var clientSecret = "a4pYfBgeQFntXfE2gMoOWk2hCrVWFWQ7un6fp0EQPCj06o1b463w2tcSYKogOfn3";
-            //var redirectUri = "http://api.hscsharp.com:5021/api/Oauth/callback";
-            var audienceUrl = "https://dev-53038owxmae5eghj.au.auth0.com/api/v2/";
+            var domain = _config.Domain;
+            var clientId = _config.ClientID;
+            var clientSecret = _config.ClientSecret;
+            var redirectUri = _config.RedirectUrl;
+            var audienceUrl = $"https://{domain}/api/v2/";
             var parameters = new Dictionary<string, string>
             {
                 { "grant_type", "client_credentials" },
@@ -125,16 +131,22 @@ public class OauthController : ControllerBase
             };
 
             var content = new FormUrlEncodedContent(parameters);
+            Console.WriteLine("content");
             Console.WriteLine(content);
 
             //return new OkObjectResult(new { result = "code" });
             var response = await client.PostAsync($"https://{domain}/oauth/token", content);
             var body = await response.Content.ReadAsStringAsync();
 
-            // // if (!responseji)NM pl.ui  .IsSuccessStatusCode)
-            // //     throw new Exception($"Auth0 token exchange failed: {body}");
-
             return new OkObjectResult(body);
+        } 
+        catch (Exception ex) 
+        {
+            return new BadRequestObjectResult(new { 
+                Error = "Error", 
+                Details = ex.Message
+            });
+        }
 
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.Data.SqlClient;
 using csharp_core_web_api.Abstracts;
 using csharp_core_web_api.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,16 +29,30 @@ builder.Services.AddCors(options =>
 });
 
 
-    var connectionString = builder.Configuration.GetConnectionString("StudentDbConnection");
+var connectionString = builder.Configuration.GetConnectionString("StudentDbConnection");
 
-    // builder.Services.AddAllDbContexts(builder.Configuration);
-    Action<DbContextOptionsBuilder> dbOptions = options =>
-        options.UseSqlServer(connectionString);
-
+Action<DbContextOptionsBuilder> dbOptions = options =>
+    options.UseSqlServer(connectionString);
 
 
-    builder.Services.AddDbContext<UserDbContext>(dbOptions);
-    builder.Services.AddDbContext<StudentDbContext>(dbOptions);
+
+builder.Services.AddDbContext<UserDbContext>(dbOptions);
+builder.Services.AddDbContext<StudentDbContext>(dbOptions);
+
+var configSection = builder.Configuration.GetSection("OAuthCredentials");
+Console.WriteLine($"ClientID: {configSection["ClientID"]}");
+Console.WriteLine($"Domain: {configSection["Domain"]}");
+
+// builder.Services.AddOptions<OAuthCredentials>().BindConfiguration("OAuthCredentials");
+// builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<OAuthCredentials>>().Value);
+
+builder.Services.Configure<OAuthCredentials>(
+    builder.Configuration.GetSection("OAuthCredentials"));
+
+
+// builder.Services.AddOptions<MyTestClass>().BindConfiguration("MyTestClass");
+// builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<MyTestClass>>().Value);
+
 //Plm18@1QazMeeva-- oauth--pawd
 // dev-53038owxmae5eghj.au.auth0.com -- tenant domain
 
