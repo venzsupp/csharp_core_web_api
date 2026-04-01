@@ -42,17 +42,17 @@ public class OauthController : ControllerBase
             string queryString = await content.ReadAsStringAsync();
             string responseBody = "";
             var url = "https://dev-53038owxmae5eghj.au.auth0.com/authorize?" + queryString;
-            /*using (HttpClient client = new HttpClient())
-            {
-                Console.WriteLine(url);
-                HttpResponseMessage response = await client.GetAsync("https://dev-53038owxmae5eghj.au.auth0.com/authorize?" + queryString);
-                response.EnsureSuccessStatusCode(); // Throws an exception if the HTTP status code is not 2xx
+            // using (HttpClient client = new HttpClient())
+            // {
+            //     Console.WriteLine(url);
+            //     HttpResponseMessage response = await client.GetAsync("https://dev-53038owxmae5eghj.au.auth0.com/authorize?" + queryString);
+            //     response.EnsureSuccessStatusCode(); // Throws an exception if the HTTP status code is not 2xx
 
-                responseBody = await response.Content.ReadAsStringAsync();
-                // Console.WriteLine(responseBody);
-            }*/
-            return Redirect(url);
-            // return new OkObjectResult(new { result = responseBody });
+            //     responseBody = await response.Content.ReadAsStringAsync();
+            //     Console.WriteLine(responseBody);
+            // }
+            // return Redirect(url); 6pOToeCyGJ3VYA2U3z38p-jkPTGFEPm3ms4U4tDnqAeRD
+            return new OkObjectResult(new { result = url });
         }
         catch (Exception ex)
         {
@@ -89,7 +89,7 @@ public class OauthController : ControllerBase
             var clientSecret = _config.ClientSecret;
             var redirectUri = _config.RedirectUrl;
             // string code = "6P1jkEzqDBfX_xvBeORvkzPQtouISQAV6PTira0Xgqkhk";
-            //Console.WriteLine(code);
+            Console.WriteLine(code);
             var parameters = new Dictionary<string, string>
             {
                 { "grant_type", "authorization_code" },
