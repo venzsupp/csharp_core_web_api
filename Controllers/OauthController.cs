@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authentication.OAuth;
 using System.Text.Json;
 using System.Net.Mail;
 using Microsoft.Extensions.Options;
+using csharp_core_web_api.RequestResponse;
+using csharp_core_web_api.Actions;
 
 namespace csharp_core_web_api.Controllers;
 
@@ -15,13 +17,17 @@ public class OauthController : ControllerBase
 {
     private readonly ILogger<OauthController> _logger;
     private readonly OAuthCredentials _config;
+    private readonly OauthAuthorizationCode _configCode;
 
-    public OauthController(ILogger<OauthController> logger, IOptions<OAuthCredentials> options)
+    private OAuthCredentialsTokenDbContext _oAuthTokenActionDbContext;
+
+
+    public OauthController(ILogger<OauthController> logger, IOptions<OAuthCredentials> options, IOptions<OauthAuthorizationCode> optionsCode, OAuthCredentialsTokenDbContext oAuthTokenActionDbContext)
     {
         _logger = logger;
         _config = options.Value;
-
-        
+        _configCode = optionsCode.Value;
+        _oAuthTokenActionDbContext = oAuthTokenActionDbContext;
     }
 
     [HttpGet("authorize")]
@@ -29,29 +35,24 @@ public class OauthController : ControllerBase
     {
         try
         {
+            var clientId = _configCode.ClientId;
+            var state = _configCode.State;
+            var scope = _configCode.Scope;
+            var redirectUri = _configCode.RedirectUri;
             var parameters = new Dictionary<string, string>
             {
                 { "response_type", "code" },
-                { "client_id", "AsvMJsJwFhnpBP0PDUm0r1aBXQcH1PVd" },
-                { "redirect_uri", "http://api.hscsharp.com:5021/api/Oauth/callback" },
-                { "state", "test12345" },
-                {"scope","openid uditiitg@gmail.com"}
+                { "client_id", clientId },
+                { "redirect_uri", redirectUri },
+                { "state", state },
+                {"scope",scope}
             };
 
             var content = new FormUrlEncodedContent(parameters);
             string queryString = await content.ReadAsStringAsync();
             string responseBody = "";
             var url = "https://dev-53038owxmae5eghj.au.auth0.com/authorize?" + queryString;
-            // using (HttpClient client = new HttpClient())
-            // {
-            //     Console.WriteLine(url);
-            //     HttpResponseMessage response = await client.GetAsync("https://dev-53038owxmae5eghj.au.auth0.com/authorize?" + queryString);
-            //     response.EnsureSuccessStatusCode(); // Throws an exception if the HTTP status code is not 2xx
-
-            //     responseBody = await response.Content.ReadAsStringAsync();
-            //     Console.WriteLine(responseBody);
-            // }
-            // return Redirect(url); 6pOToeCyGJ3VYA2U3z38p-jkPTGFEPm3ms4U4tDnqAeRD
+            
             return new OkObjectResult(new { result = url });
         }
         catch (Exception ex)
@@ -131,12 +132,29 @@ public class OauthController : ControllerBase
             };
 
             var content = new FormUrlEncodedContent(parameters);
-            Console.WriteLine("content");
-            Console.WriteLine(content);
 
             //return new OkObjectResult(new { result = "code" });
             var response = await client.PostAsync($"https://{domain}/oauth/token", content);
             var body = await response.Content.ReadAsStringAsync();
+
+            var OAuthData = JsonSerializer.Deserialize<OAuthCredentialsResponse>(body);
+            
+            DateTime TokenExpire = DateTime.Now;
+
+            if (OAuthData.Expire.HasValue) 
+            {
+                TokenExpire = DateTime.UtcNow.AddSeconds(OAuthData.Expire.Value);
+                // TokenExpire = DateTimeOffset.FromUnixTimeSeconds(expiry).UtcDateTime;
+            }
+            OAuthCredentialsToken _oAuthCredentialsToken = new()
+            {
+                Token = OAuthData.AccessToken,
+                ExpiryDate = TokenExpire
+
+            };
+            Console.WriteLine($"Date:: {_oAuthCredentialsToken.ExpiryDate}");
+            OAuthTokenAction oAuthTokenAction = new( _oAuthTokenActionDbContext);
+            await oAuthTokenAction.SaveOAuthToken(_oAuthCredentialsToken);
 
             return new OkObjectResult(body);
         } 
@@ -149,4 +167,6 @@ public class OauthController : ControllerBase
         }
 
     }
+
+
 }

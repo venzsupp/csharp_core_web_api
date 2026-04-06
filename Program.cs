@@ -8,6 +8,7 @@ using csharp_core_web_api.Abstracts;
 using csharp_core_web_api.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using csharp_core_web_api.Middleware;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +32,8 @@ builder.Services.AddCors(options =>
 
 var connectionString = builder.Configuration.GetConnectionString("StudentDbConnection");
 
+Console.WriteLine($"connectionString, {connectionString}");
+
 Action<DbContextOptionsBuilder> dbOptions = options =>
     options.UseSqlServer(connectionString);
 
@@ -38,6 +41,7 @@ Action<DbContextOptionsBuilder> dbOptions = options =>
 
 builder.Services.AddDbContext<UserDbContext>(dbOptions);
 builder.Services.AddDbContext<StudentDbContext>(dbOptions);
+builder.Services.AddDbContext<OAuthCredentialsTokenDbContext>(dbOptions);
 
 var configSection = builder.Configuration.GetSection("OAuthCredentials");
 Console.WriteLine($"ClientID: {configSection["ClientID"]}");
@@ -49,35 +53,13 @@ Console.WriteLine($"Domain: {configSection["Domain"]}");
 builder.Services.Configure<OAuthCredentials>(
     builder.Configuration.GetSection("OAuthCredentials"));
 
+builder.Services.Configure<OauthAuthorizationCode>(
+    builder.Configuration.GetSection("OauthAuthorizationCode"));
+
 
 // builder.Services.AddOptions<MyTestClass>().BindConfiguration("MyTestClass");
 // builder.Services.AddSingleton(sp => sp.GetRequiredService<IOptions<MyTestClass>>().Value);
 
-//Plm18@1QazMeeva-- oauth--pawd
-// dev-53038owxmae5eghj.au.auth0.com -- tenant domain
-
-// cleint secret == a4pYfBgeQFntXfE2gMoOWk2hCrVWFWQ7un6fp0EQPCj06o1b463w2tcSYKogOfn3
-// client id == AsvMJsJwFhnpBP0PDUm0r1aBXQcH1PVd
-
-// builder.Services.AddSingleton<IDbConnection>( ser =>
-// {
-//     // var connectionStringVal1 =builder.Configuration.GetValue<string>("dbstring");
-//     // Console.WriteLine("======connectionStringVal1111======");
-//     // Console.WriteLine(connectionStringVal1);
-//     // Console.WriteLine("======connectionStringVal111 END======");
-
-//     var connectionStringVal = builder.Configuration.GetConnectionString("StudentDbConnection");
-//     Console.WriteLine("======connectionStringVal======");
-//     Console.WriteLine(connectionStringVal);
-//     Console.WriteLine("======connectionStringVal END======");
-
-//     return new SqlConnection(connectionStringVal);
-//     //ser.
-//     //IDbConnector.ConnectionString = connectionStringVal.StudentDbConnection;
-//     // DbConnection dbConnect = new();
-//     //  dbConnect.connectDB("dsfsf");
-//     //return DbConnection; 
-// });
 
 var app = builder.Build();
 
@@ -90,7 +72,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+// app.UseAuthorization();
+app.UseMiddleware<OAuthMiddleware>();
 
 app.MapControllers();
 app.UseCors("AllowAll");

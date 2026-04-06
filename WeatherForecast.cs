@@ -10,3 +10,7 @@ public class WeatherForecast
 
     public string? Summary { get; set; }
 }
+
+
+// The namespace 'csharp_core_web_api' 
+// already contains a definition for 'WeatherForecast' [/var/www/html/csharp_core_web_api.csproj]

@@ -5,14 +5,14 @@ RUN apt-get update \
     && curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l /vsdbg 
     
 ARG BUILD_CONFIGURATION=Release
-WORKDIR /var/www/html
+WORKDIR /src/api
 COPY ["csharp_core_web_api.csproj", "."]
 RUN dotnet restore "./csharp_core_web_api.csproj"
 
 
     
-COPY . .
-WORKDIR "/var/www/html"
+COPY . /src/api
+# WORKDIR "/src/api"
 RUN dotnet build "./csharp_core_web_api.csproj" -c %BUILD_CONFIGURATION% -o /app/build
 
 FROM build AS publish
@@ -23,7 +23,7 @@ RUN dotnet build -c Debug -o /app/build
 RUN dotnet publish -c Debug -o /app/publish
 
 FROM build AS final
-WORKDIR /var/www/html
+WORKDIR /src/api
 # EXPOSE 8080
 COPY --from=build /app/build .
 COPY --from=publish /app/publish .
