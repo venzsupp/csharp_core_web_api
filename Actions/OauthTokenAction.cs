@@ -20,13 +20,8 @@ public class OAuthTokenAction
     {
         try
         {
-            Console.WriteLine("1-----res");
-            // _oAuthCredentialsTokenDbContext.OAuthCredentialsToken.Add
             _oAuthCredentialsTokenDbContext.OAuthCredentialsToken.Add(oAuthToken); // Stage insert
-            Console.WriteLine("2-----res");
             var res = await _oAuthCredentialsTokenDbContext.SaveChangesAsync(); // Commit to database 
-            Console.WriteLine("res");
-            Console.WriteLine(res);
             return res;
         }
         catch (SqlException ex)
