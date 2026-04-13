@@ -17,3 +17,8 @@
 # git commit -m "message"
 
 # git push origin main
+
+# dotnet new xunit -n UnitTest
+
+
+/src/api/obj/Debug/net8.0/.NETCoreApp,Version=v8.0.AssemblyAttributes.cs(4,12): error CS0579: Duplicate 'global::System.Runtime.Versioning.TargetFrameworkAttribute' attribute [/src/api/main_project.csproj]

@@ -2,30 +2,36 @@
 services:
   csharp-api:
     container_name: "csharp-api"
-    build: .
-    volumes:
-      - .:/src/csharp_api
-    # ports:
-    #   - "5201:8080"
-  csharp-web:
-    image: nginx:latest
+    build: 
+      context: .
+      # dockerfile: Development.Dockerfile
+      dockerfile: Dockerfile
+      # args:
+      #   DEPLOY_ENV: ${DEPLOY_ENV}
+    # volumes:
+    #   - .:/src/csharp_core_web_api
     ports:
-        - "5021:8080"
-    volumes:
-        - .:/src/csharp_api
-        - ./nginx.conf:/etc/nginx/conf.d/site.conf
-    links:
-        - csharp-api
-  csharp-sqldb:
-    container_name: "csharp-sqldb"
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    restart: always
-    ports:
-      - 1433:1433
-    environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "Platinum01"
-      MSSQL_DATABASE: "csharp_db"
+      - "5021:8080"
+    
+  # csharp-web:
+  #   image: nginx:latest
+  #   ports:
+  #       - "5021:8080"
+  #   volumes:
+  #       - .:/src/csharp_core_web_api
+  #       - ./nginx.conf:/etc/nginx/conf.d/site.conf
+  #   links:
+  #       - csharp-api
+  # csharp-sqldb:
+  #   container_name: "csharp-sqldb"
+  #   image: mcr.microsoft.com/mssql/server:2022-latest
+  #   restart: always
+  #   ports:
+  #     - 1433:1433
+  #   environment:
+  #     ACCEPT_EULA: "Y"
+  #     MSSQL_SA_PASSWORD: "Platinum01"
+  #     MSSQL_DATABASE: "csharp_db"
 
   # csharp-mysql:
   # dotnet add package Microsoft.EntityFrameworkCore

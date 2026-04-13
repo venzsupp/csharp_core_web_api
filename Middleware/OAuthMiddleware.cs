@@ -25,11 +25,11 @@ public class OAuthMiddleware
         Console.WriteLine($"Local: {localNow}");
         Console.WriteLine($"UTC: {utcNow}");
         Console.WriteLine($"Formatted: {formattedTime}");
-        int result = formattedTime.CompareTo(expiry);
-        if (result > 0)
-        {
+        // int result = formattedTime.CompareTo(expiry);
+        // if (result > 0)
+        // {
 
-        }
+        // }
         await _next(context);
         Console.WriteLine("Request out going");
     }
