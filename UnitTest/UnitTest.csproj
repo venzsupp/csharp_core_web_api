@@ -19,6 +19,9 @@
   <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
-  
 
+  <ItemGroup>
+    <ProjectReference Include="..\csharp_core_web_api.csproj" />
+  </ItemGroup>
+  
 </Project>

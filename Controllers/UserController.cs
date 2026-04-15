@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using csharp_core_web_api.Actions;
 using System.Data;
 using csharp_core_web_api.Models;
-using Microsoft.Data.SqlClient;
+// using Microsoft.Data.SqlClient;
 namespace csharp_core_web_api.Controllers;
 
 
@@ -20,14 +20,6 @@ public class UserController : ControllerBase
         _userDbContext = userDbContext;
     }
 
-    // [HttpGet(Name = "Get")]
-    // [ProducesResponseType(StatusCodes.Status201Created)]
-    // [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    // public async Task<IActionResult> Get()
-    // {
-    //     //  The namespace 'csharp_core_web_api' already contains a definition 
-    // for 'WeatherForecast' [/var/www/html/csharp_core_web_api.csproj]
-    // }
     [HttpPost("user")]
     public async Task<IActionResult> Store([FromBody] Users user)
     {
