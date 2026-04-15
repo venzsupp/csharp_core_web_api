@@ -10,7 +10,7 @@ RUN dotnet restore "./csharp_core_web_api.csproj"
 
 
     
-COPY . /src/csharp_core_web_api
+COPY . .
 
 CMD ["dotnet", "watch", "run", "--urls=http://0.0.0.0:8080"]
 

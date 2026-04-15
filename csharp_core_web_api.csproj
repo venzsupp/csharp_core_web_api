@@ -22,5 +22,10 @@
   <ItemGroup>
     <ProjectReference Include="UnitTest/UnitTest.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Compile Remove="**/bin/**" />
+    <Compile Remove="**/obj/**" />
+    <Compile Remove="UnitTest/**/*.cs" />
+  </ItemGroup>
 </Project>
+
