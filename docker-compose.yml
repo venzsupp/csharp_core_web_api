@@ -4,8 +4,8 @@ services:
     container_name: "csharp-api"
     build: 
       context: .
-      # dockerfile: Development.Dockerfile
-      dockerfile: Dockerfile
+      dockerfile: Development.Dockerfile
+      # dockerfile: Dockerfile
       # args:
       #   DEPLOY_ENV: ${DEPLOY_ENV}
     # volumes:

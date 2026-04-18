@@ -4,6 +4,9 @@ using csharp_core_web_api.Actions;
 using System.Data;
 using csharp_core_web_api.Models;
 // using Microsoft.Data.SqlClient;
+
+using csharp_core_web_api.Abstracts.Exceptions;
+
 namespace csharp_core_web_api.Controllers;
 
 
@@ -47,7 +50,7 @@ public class UserController : ControllerBase
             // temp.Status = "Pending";
             return new OkObjectResult( resp);
         }
-        catch (Exception ex)
+        catch (DataAccessException ex)
         {
            return new BadRequestObjectResult(ex.Message);
         }
