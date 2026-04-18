@@ -7,28 +7,28 @@ services:
       dockerfile: Development.Dockerfile
     volumes:
       - .:/src/csharp_core_web_api
-    ports:
-      - "5021:8080"
+    # ports:
+    #   - "5021:8080"
     
-  # csharp-web:
-  #   image: nginx:latest
-  #   ports:
-  #       - "5021:8080"
-  #   volumes:
-  #       - .:/src/csharp_core_web_api
-  #       - ./nginx.conf:/etc/nginx/conf.d/site.conf
-  #   links:
-  #       - csharp-api
-  # csharp-sqldb:
-  #   container_name: "csharp-sqldb"
-  #   image: mcr.microsoft.com/mssql/server:2022-latest
-  #   restart: always
-  #   ports:
-  #     - 1433:1433
-  #   environment:
-  #     ACCEPT_EULA: "Y"
-  #     MSSQL_SA_PASSWORD: "Platinum01"
-  #     MSSQL_DATABASE: "csharp_db"
+  csharp-web:
+    image: nginx:latest
+    ports:
+        - "5021:8080"
+    volumes:
+        - .:/src/csharp_core_web_api
+        - ./nginx.conf:/etc/nginx/conf.d/site.conf
+    links:
+        - csharp-api
+  csharp-sqldb:
+    container_name: "csharp-sqldb"
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: always
+    ports:
+      - 1433:1433
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Platinum01"
+      MSSQL_DATABASE: "csharp_db"
 
   # csharp-mysql:
   # dotnet add package Microsoft.EntityFrameworkCore
