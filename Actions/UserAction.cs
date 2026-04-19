@@ -34,7 +34,7 @@ public class UserAction(UserDbContext userDbContext)
         }
         catch (Exception ex)
         {
-            throw new DataAccessException("Get user data", ex);
+            throw new DataAccessException("Get user data failed", ex);
         }
     }
 }

@@ -72,4 +72,41 @@ public class UserActionTest
         // Optional: Verify custom properties or message
         Assert.Equal("Failed to save", exception.Message);
     }
+
+    [Fact]
+
+    public async Task GetUser_SuccessfulResult()
+    {
+        // Arrange
+        var options = new DbContextOptionsBuilder<UserDbContext>()
+            .UseInMemoryDatabase(databaseName: "TestDb")
+            .Options;
+
+        using var context = new UserDbContext(options);
+
+        Users user = new()
+        {
+            UserName = "TestFName", 
+            Password = "TestPassword"
+        };
+
+       
+        UserAction userAction = new(context);
+        await userAction.SaveUser(user);
+
+        Users user1 = new()
+        {
+            UserName = "TestFName1", 
+            Password = "TestPassword1"
+        };
+
+        await userAction.SaveUser(user1);
+
+        // Act
+        List<Users> result = await userAction.GetUsers();
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.NotEmpty(result);
+    }
 }
